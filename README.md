@@ -1,9 +1,6 @@
-# Automating-Lambda-Function-Deployment-with-Pulumi and GitHub Actions
+# Automating Lambda Function Deployment with Pulumi and GitHub Actions
 
 This project demonstrates the automated deployment of a Lambda function using Pulumi and GitHub Actions. By integrating Pulumi for infrastructure as code and GitHub Actions for continuous deployment, it ensures a smooth, repeatable process for provisioning AWS resources and deploying serverless applications. The automation setup enhances the efficiency and reliability of managing cloud infrastructure, streamlining the deployment process while maintaining high standards of observability.
-
-<!-- ![](https://github.com/Galadon123/-Lambda-Function-Deployment/blob/main/image/f.png) -->
-
 
 ## Project Directory
 
@@ -13,29 +10,26 @@ project-root/
 │   ├── Dockerfile
 │   ├── index.js
 │   ├── package.json
-|   |__ __main__.py
-    |__ requirements.txt
-|       
+│   └── __main__.py
+│   └── requirements.txt
 └── infrastructure/
      ├── __main__.py
-     |__ Dockerfile
-     |__ lambda_function.py
-     |__ network.py
-     |__ security.py
-     |__ storage.py
-     |__ requirements.txt
-
+     ├── Dockerfile
+     ├── lambda_function.py
+     ├── network.py
+     ├── security.py
+     ├── storage.py
+     └── requirements.txt
 └── .github/
-|    └── workflows/
-|        ├── deploy.yml
-|        └── infra.yml     
+     └── workflows/
+         ├── deploy.yml
+         └── infra.yml     
 ```
 
 
+## Locally Set Up Pulumi for the `infra` Directory
 
-### Locally Set Up Pulumi for the `infra` Directory
-
-#### Step 1: Install Pulumi
+### Step 1: Install Pulumi
 
 ```sh
 curl -fsSL https://get.pulumi.com | sh
@@ -43,7 +37,7 @@ curl -fsSL https://get.pulumi.com | sh
 
 This command installs Pulumi on your local machine.
 
-#### Step 2: Log in to Pulumi
+### Step 2: Log in to Pulumi
 
 ```sh
 pulumi login
@@ -51,7 +45,7 @@ pulumi login
 
 This command logs you into your Pulumi account, enabling you to manage your infrastructure as code.
 
-#### Step 3: Initialize Pulumi Project
+### Step 3: Initialize Pulumi Project
 
 ```sh
 cd infra
@@ -60,9 +54,9 @@ pulumi new aws-python
 
 This command initializes a new Pulumi project using the AWS Python template in the `infra` directory.
 
-### Infrastructure Code Breakdown
+## Infrastructure Code Breakdown
 
-#### `infrastructure/__main__.py`
+### `infrastructure/__main__.py`
 
 ```python
 # __main__.py
@@ -73,13 +67,13 @@ from security import create_security_groups
 from lambda_function import create_lambda_function
 from storage import create_storage_and_outputs
 
-# Create network infrastru
+# Create network infrastructure
 network = create_network_infrastructure()
 
-# Create security groupsfaf
+# Create security groups
 security_groups = create_security_groups(network["vpc"].id)
 
-# Create Lambda function and related 
+# Create Lambda function and related resources
 lambda_resources = create_lambda_function(
     network["vpc"].id,
     network["private_subnet"].id,
@@ -89,7 +83,7 @@ lambda_resources = create_lambda_function(
 # Create S3 bucket and prepare for output storage
 bucket, upload_exports_to_s3 = create_storage_and_outputs(network["vpc"].id)
 
-# Collect all outputsfas
+# Collect all outputs
 all_outputs = {
     "vpc_id": network["vpc"].id,
     "public_subnet_id": network["public_subnet"].id,
@@ -114,7 +108,11 @@ pulumi.export('lambda_function_name', lambda_resources["lambda_function"].name)
 pulumi.export('bucket_name', bucket.id)
 ```
 
-#### `infrastructure/lambda_function.py`
+### Explanation
+
+This script is the main entry point for the Pulumi project. It orchestrates the creation of various resources such as the network infrastructure, security groups, Lambda function, and S3 bucket. It also collects the output values and exports them for easy access.
+
+### `infrastructure/lambda_function.py`
 
 ```python
 import pulumi
@@ -202,18 +200,18 @@ def create_lambda_function(vpc_id, private_subnet_id, lambda_security_group_id):
     # Define the ECR image name
     ecr_image_name = repo.repository_url.apply(lambda url: f"{url}:latest")
 
-    # Push the Docker image to the ECR repositorys
+    # Push the Docker image to the ECR repository
     image = docker.Image('my-node-app',
-    image_name=ecr_image_name,
-    build=docker.DockerBuildArgs(
-        context=".",
-        dockerfile="Dockerfile",
-    ),
-    registry={
-        "server": registry_server,
-        "username": decoded_creds.apply(lambda creds: creds[0]),
-        "password": decoded_creds.apply(lambda creds: creds[1]),
-    }
+        image_name=ecr_image_name,
+        build=docker.DockerBuildArgs(
+            context=".",
+            dockerfile="Dockerfile",
+        ),
+        registry={
+            "server": registry_server,
+            "username": decoded_creds.apply(lambda creds: creds[0]),
+            "password": decoded_creds.apply(lambda creds: creds[1]),
+        }
     )
 
     # Create Lambda function
@@ -248,7 +246,11 @@ def create_lambda_function(vpc_id, private_subnet_id, lambda_security_group_id):
     }
 ```
 
-#### `infrastructure/network.py`
+### Explanation
+
+This code snippet defines the Lambda function, including the IAM roles and policies required for it to run. It also sets up an ECR repository to store the Docker image for the Lambda function and ensures that the Lambda function can access necessary AWS resources like S3.
+
+### `infrastructure/network.py`
 
 ```python
 # network.py
@@ -268,11 +270,13 @@ def create_network_infrastructure():
                                   opts=pulumi.ResourceOptions(depends_on=[vpc]),
                                   tags={"Name": "my-vpc-igw"})
 
-    # Create Route Table for Public
+    # Create Route Table for Public Subnet
     public_route_table = aws.ec2.RouteTable("my-vpc-public-rt",
                                             vpc_id=vpc.id,
                                             routes=[{
-                                                "cidr_block": "0.0.0.0/0",
+                                                "cidr_block": "0.0.0.0
+
+/0",
                                                 "gateway_id": igw.id,
                                             }],
                                             opts=pulumi.ResourceOptions(depends_on=[igw]),
@@ -335,7 +339,11 @@ def create_network_infrastructure():
     }
 ```
 
-#### `infrastructure/storage.py`
+### Explanation
+
+This code defines the network infrastructure, including creating a VPC, subnets, route tables, and NAT gateway. It ensures the Lambda function can communicate within the specified network.
+
+### `infrastructure/storage.py`
 
 ```python
 import pulumi
@@ -364,15 +372,22 @@ def create_storage_and_outputs(vpc_id):
 
     return bucket, upload_exports_to_s3
 ```
-Note : Remember to provide a unique name for S3 Bucket
 
-#### `infrastructure/dockerfil`
+### Explanation
+
+This code snippet creates an S3 bucket and defines a function to upload Pulumi outputs to the bucket. This allows other parts of the infrastructure to access these outputs.
+
+### `infrastructure/Dockerfile`
 
 ```dockerfile
 FROM nginx:latest
 ```
 
-#### Update `infrastructure/requiremtns.txt` with appropiate docker version
+### Explanation
+
+This is a simple Dockerfile that uses the latest Nginx image. This is used to demonstrate the deployment of a Dockerized Lambda function.
+
+### `infrastructure/requirements.txt`
 
 ```
 pulumi>=3.0.0,<4.0.0
@@ -380,9 +395,13 @@ pulumi-aws>=6.0.2,<7.0.0
 pulumi_docker>=3.0.0,<4.0.0
 ```
 
-## Setup Infrastructure for Build image and Update Lambda function
+### Explanation
 
-#### ` Deploy-Lambda/ __main__.py`
+This file lists the required Pulumi packages for the infrastructure code.
+
+## Setup Infrastructure for Build Image and Update Lambda Function
+
+### `Deploy-Lambda/__main__.py`
 
 ```python
 import pulumi
@@ -390,17 +409,15 @@ import pulumi_aws as aws
 import json
 import base64
 import pulumi_docker as docker
-
 import subprocess
 import time
-
 
 class LambdaUpdater(pulumi.dynamic.ResourceProvider):
     def create(self, props):
         cmd = f"aws lambda update-function-code --function-name {props['function_name']} --image-uri {props['image_uri']} --region {props['region']}"
         result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
         
-        # Generate a unique ID for this updatesfsa
+        # Generate a unique ID for this update
         new_id = f"{props['function_name']}_{props['timestamp']}"
         
         return pulumi.dynamic.CreateResult(id_=new_id, outs=props)
@@ -409,7 +426,7 @@ class LambdaUpdater(pulumi.dynamic.ResourceProvider):
         cmd = f"aws lambda update-function-code --function-name {props['function_name']} --image-uri {props['image_uri']} --region {props['region']}"
         result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
         
-        # Use the existing ID's
+        # Use the existing ID
         props['id'] = id
         
         return pulumi.dynamic.UpdateResult(outs=props)
@@ -428,7 +445,7 @@ def get_exports_from_s3(bucket_name, object_key):
     
     # Check if s3_object.body is a string or an Output
     if isinstance(s3_object.body, str):
-        # If it's a string, parse it and wrap it in a Pulumi Outputs
+        # If it's a string, parse it and wrap it in a Pulumi Output
         return pulumi.Output.from_input(json.loads(s3_object.body))
     else:
         # If it's an Output, apply json.loads to it
@@ -450,7 +467,7 @@ decoded_creds = creds.authorization_token.apply(
 
 registry_server = creds.proxy_endpoint
 
-# Define the ECR image names
+# Define the ECR image name
 ecr_image_name = repository_url.apply(lambda url: f"{url}:latest")
 
 # Push the Docker image to the ECR repository
@@ -466,7 +483,6 @@ image = docker.Image('my-node-app',
         "password": decoded_creds.apply(lambda creds: creds[1]),
     }
 )
-
 
 lambda_function_name = exports.apply(lambda exp: exp['lambda_function_name'])
 lambda_role_arn = exports.apply(lambda exp: exp['lambda_role_arn'])
@@ -491,6 +507,7 @@ default_resource = aws.apigateway.Resource("defaultResource",
     path_part="default",
     rest_api=api.id,
 )
+
 # Create a resource
 lambda_resource = aws.apigateway.Resource("lambdaResource",
     parent_id=default_resource.id,
@@ -514,7 +531,9 @@ test1_method = aws.apigateway.Method("test1_Method",
     rest_api=api.id,
 )
 
-test2_method = aws.apigateway.Method("test2_Method",
+test2_method = aws.ap
+
+igateway.Method("test2_Method",
     http_method="GET",
     authorization="NONE",
     resource_id=test2_resource.id,
@@ -570,7 +589,6 @@ deployment = aws.apigateway.Deployment("myDeployment",
         "integration": integration.id,
         "test1_integration": test1_integration.id,
         "test2_integration": test2_integration.id,
-
     },
     opts=pulumi.ResourceOptions(depends_on=[integration]),
 )
@@ -584,10 +602,11 @@ stage = aws.apigateway.Stage("myStage",
 pulumi.export('image_url', image.image_name)
 ```
 
-Note : Remember to update the bucket name appropiately
+### Explanation
 
+This script handles the process of updating the Lambda function with a new Docker image and setting up an API Gateway for the Lambda function. It uses a custom dynamic Pulumi resource to execute the AWS CLI commands needed to update the Lambda function's code.
 
-#### Update `Deploy-Lambda/requiremtns.txt` with appropiate docker version
+### `Deploy-Lambda/requirements.txt`
 
 ```
 pulumi>=3.0.0,<4.0.0
@@ -595,17 +614,23 @@ pulumi-aws>=6.0.2,<7.0.0
 pulumi_docker>=3.0.0,<4.0.0
 ```
 
+### Explanation
+
+This file lists the required Pulumi packages for the deployment code.
+
 ## Locally Set Up Node.js App in `Deploy-Lambda` Directory
 
 1. **Initialize Node.js Project**:
+
    ```sh
    cd deploy-in-lambda
    npm init -y
    ```
 
 2. **Create `Deploy-Lambda/index.js`**:
-```javascript
-exports.handler = async (event) => {
+
+   ```javascript
+   exports.handler = async (event) => {
     try {
       let response;
       switch (event.httpMethod) {
@@ -648,56 +673,60 @@ exports.handler = async (event) => {
       };
     }
   };
-```
+   ```
 
 3. **Create `Deploy-Lambda/package.json`**:
-```json
+
+   ```json
    {
-  "name": "lambda-function",
-  "version": "1.0.0",
-  "description": "A simple AWS Lambda function",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "author": "Fazlul Karim",
-  "license": "ISC"
-  }
-```
+      "name": "lambda-function",
+      "version": "1.0.0",
+      "description": "A simple AWS Lambda function",
+      "main": "index.js",
+      "scripts": {
+        "start": "node index.js"
+      },
+      "author": "Fazlul Karim",
+      "license": "ISC"
+   }
+   ```
+
 4. **Create `Deploy-Lambda/Dockerfile`**:
 
-```dockerfile
-# Stage 1: Build Stage
-FROM node:20 as build-stage
+   ```dockerfile
+   # Stage 1: Build Stage
+   FROM node:20 as build-stage
 
-# Set the working directory
-WORKDIR /app
+   # Set the working directory
+   WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package.json package-lock.json ./
+   # Copy package.json and package-lock.json
+   COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN npm install --production
+   # Install dependencies
+   RUN npm install --production
 
-# Copy source files
-COPY index.js ./
+   # Copy source files
+   COPY index.js ./
 
-# Stage 2: Final Stage
-FROM public.ecr.aws/lambda/nodejs:20
+   # Stage 2: Final Stage
+   FROM public.ecr.aws/lambda/nodejs:20
 
-# Copy necessary files from the build stage
-COPY --from=build-stage /app /var/task/
+   # Copy necessary files from the build stage
+   COPY --from=build-stage /app /var/task/
 
-# Set the CMD to your handler
-CMD [ "index.handler" ]
-```
+   # Set the CMD to your handler
+   CMD [ "index.handler" ]
+   ```
 
+### Explanation
 
+This Node.js application serves as the Lambda function's code. The Dockerfile builds the application and prepares it to run in an AWS Lambda environment using the provided public ECR image.
 
 ## Create a Token for Login to Pulumi
 
 1. **Create Pulumi Access Token**:
-    - Go to the Pulumi Console at https://app.pulumi.com.
+    - Go to the Pulumi Console at [https://app.pulumi.com](https://app.pulumi.com).
     - Navigate to `Settings` > `Access Tokens`.
     - Click `Create Token`, give it a name, and copy the token.
 
@@ -716,7 +745,6 @@ CMD [ "index.handler" ]
         - `PULUMI_ACCESS_TOKEN`: Your Pulumi access token.
 
     ![](https://github.com/Galadon123/Lambda-Function-with-Pulumi-python/blob/main/image/l-3.png)
-
 
 ## Create Two Workflows
 
@@ -768,7 +796,7 @@ jobs:
       - name: Pulumi stack select
         run: |
           source infrastructure/venv/bin/activate
-          pulumi stack select  Galadon123/Lambda-Infrastructure --cwd infrastructure
+          pulumi stack select Galadon123/Lambda-Infrastructure --cwd infrastructure
 
       - name: Pulumi refresh
         run: |
@@ -780,7 +808,10 @@ jobs:
           source infrastructure/venv/bin/activate
           pulumi up --yes --cwd infrastructure
 ```
-Note : Add the which you created at the pulumi initialization
+
+### Explanation
+
+This GitHub Actions workflow sets up the Pulumi environment, installs dependencies, configures AWS credentials, logs in to Pulumi, and deploys the infrastructure code whenever there are changes in the `infrastructure` directory.
 
 ### `.github/workflows/deploy.yml`
 
@@ -800,7 +831,9 @@ on:
       - completed
 
 jobs:
-  deploy:
+  deploy
+
+:
     runs-on: ubuntu-latest
 
     steps:
@@ -847,13 +880,16 @@ jobs:
         run: |
           source Deploy-Lambda/venv/bin/activate
           pulumi up --yes --cwd Deploy-Lambda
-
 ```
-Note : Add the which you created at the pulumi initialization
+
+### Explanation
+
+This GitHub Actions workflow is triggered by changes in the `Deploy-Lambda` directory. It sets up the environment, installs dependencies, configures AWS credentials, logs in to Pulumi, and deploys the Lambda function and related resources.
 
 ## Git Push the Project
 
 1. **Initialize Git Repository**:
+
     ```sh
     git init
     git add .
@@ -862,6 +898,7 @@ Note : Add the which you created at the pulumi initialization
     ```
 
 2. **Add Remote and Push**:
+
     ```sh
     git remote add origin https://github.com/yourusername/your-repo.git
     git push -u origin main
@@ -917,8 +954,18 @@ Note : Add the which you created at the pulumi initialization
 
     ![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/o-3.png)
 
-### Test Each API-Gateways
+### Test Each API-Gateway Endpoint
+Make sure to test each of the API-Gateway endpoints:
+1. `/default/my-lambda-function`
+2. `/default/my-lambda-function/test1`
+3. `/default/my-lambda-function/test2`
+
+Each endpoint should return the respective message as defined in your Lambda function handler.
+
 ![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/w-3.png)
 ![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/w-1.png)
 ![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/w-2.png)
 
+## Summary
+
+By following this guide, you have set up a fully automated process for deploying an AWS Lambda function using Pulumi and GitHub Actions. This setup ensures that your cloud infrastructure and serverless applications are deployed consistently and reliably, with high standards of observability and efficiency. The integration of Pulumi and GitHub Actions provides a robust CI/CD pipeline, streamlining the management of your AWS resources.
