@@ -3,7 +3,7 @@ import pulumi_aws as aws
 import json
 import base64
 import pulumi_docker as docker
-from pulumi_docker import Image, ImageRegistry
+
 import subprocess
 import time
 
@@ -67,18 +67,18 @@ registry_server = creds.proxy_endpoint
 ecr_image_name = repository_url.apply(lambda url: f"{url}:latest")
 
 # Push the Docker image to the ECR repository
-image = docker.Image('nginx-ecr-image',
-        image_name=ecr_image_name,
-        build=docker.DockerBuildArgs(
-            context=".",
-            dockerfile="Dockerfile",
-        ),
-        registry=ImageRegistry(
-          server=registry_server,
-          username=decoded_creds.apply(lambda creds: creds[0]),
-          password=decoded_creds.apply(lambda creds: creds[1]),
-    )
-    )
+image = docker.Image('my-node-app',
+    image_name=ecr_image_name,
+    build=docker.DockerBuildArgs(
+        context=".",
+        dockerfile="Dockerfile",
+    ),
+    registry={
+        "server": registry_server,
+        "username": decoded_creds.apply(lambda creds: creds[0]),
+        "password": decoded_creds.apply(lambda creds: creds[1]),
+    }
+)
 
 
 lambda_function_name = exports.apply(lambda exp: exp['lambda_function_name'])
