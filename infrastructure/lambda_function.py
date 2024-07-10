@@ -83,7 +83,7 @@ def create_lambda_function(vpc_id, private_subnet_id, lambda_security_group_id):
     # Define the ECR image name
     ecr_image_name = repo.repository_url.apply(lambda url: f"{url}:latest")
 
-    # Push the Docker image to the ECR repository
+    # Push the Docker image to the ECR repositorys
     image = docker.Image('my-node-app',
     image_name=ecr_image_name,
     build=docker.DockerBuildArgs(

@@ -37,20 +37,20 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         run: |
-          source venv/bin/activate
+          source infrastructure/venv/bin/activate
           pulumi login
 
       - name: Pulumi stack select
         run: |
-          source venv/bin/activate
+          source infrastructure/venv/bin/activate
           pulumi stack select  Galadon123/Lambda-Infrastructure --cwd infrastructure
 
       - name: Pulumi refresh
         run: |
-          source venv/bin/activate
+          source infrastructure/venv/bin/activate
           pulumi refresh --yes --cwd infrastructure
 
       - name: Pulumi up
         run: |
-          source venv/bin/activate
+          source infrastructure/venv/bin/activate
           pulumi up --yes --cwd infrastructure
