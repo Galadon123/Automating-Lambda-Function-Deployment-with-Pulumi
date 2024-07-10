@@ -69,7 +69,7 @@ ecr_image_name = repository_url.apply(lambda url: f"{url}:latest")
 # Push the Docker image to the ECR repository
 image = docker.Image('nginx-ecr-image',
         image_name=ecr_image_name,
-        build=docker.DockerBuild(
+        build=docker.DockerBuildArgs(
             context=".",
             dockerfile="Dockerfile",
         ),
