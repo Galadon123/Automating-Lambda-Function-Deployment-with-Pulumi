@@ -2,7 +2,7 @@
 
 This project demonstrates the automated deployment of a Lambda function using Pulumi and GitHub Actions. By integrating Pulumi for infrastructure as code and GitHub Actions for continuous deployment, it ensures a smooth, repeatable process for provisioning AWS resources and deploying serverless applications. The automation setup enhances the efficiency and reliability of managing cloud infrastructure, streamlining the deployment process while maintaining high standards of observability.
 
-![](https://github.com/Galadon123/-Lambda-Function-Deployment/blob/main/image/f.png)
+<!-- ![](https://github.com/Galadon123/-Lambda-Function-Deployment/blob/main/image/f.png) -->
 
 
 ## Project Directory
@@ -780,6 +780,7 @@ jobs:
           source infrastructure/venv/bin/activate
           pulumi up --yes --cwd infrastructure
 ```
+Note : Add the which you created at the pulumi initialization
 
 ### `.github/workflows/deploy.yml`
 
@@ -848,6 +849,7 @@ jobs:
           pulumi up --yes --cwd Deploy-Lambda
 
 ```
+Note : Add the which you created at the pulumi initialization
 
 ## Git Push the Project
 
@@ -892,7 +894,7 @@ jobs:
 
      Outputs:
 
-     ![](./images/o-1.png)
+     ![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/o-1.png)
 
      ```json
      {
@@ -902,7 +904,7 @@ jobs:
      ```
      Outputs:
 
-     ![](./images/o-2.png)
+     ![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/o-2.png)
 
      ```json
      {
@@ -913,16 +915,10 @@ jobs:
 
      Outputs:
 
-    ![](./images/o-3.png)
+    ![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/o-3.png)
 
-### Testing with API Gateway
-
-Create a api gateway with HTTP type for Lambda function inside lambda function
-
-![](./image/lura-2.png)
-
-### Test Each API 
-![](./image/w-3.png)
-![](./image/w-1.png)
-![](./image/w-2.png)
+### Test Each API-Gateways
+![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/w-3.png)
+![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/w-1.png)
+![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/w-2.png)
 
