@@ -63,7 +63,7 @@ decoded_creds = creds.authorization_token.apply(
 
 registry_server = creds.proxy_endpoint
 
-# Define the ECR image name
+# Define the ECR image names
 ecr_image_name = repository_url.apply(lambda url: f"{url}:latest")
 
 # Push the Docker image to the ECR repository
