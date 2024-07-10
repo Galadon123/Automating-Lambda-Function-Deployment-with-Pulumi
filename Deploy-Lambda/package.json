@@ -6,6 +6,6 @@
   "scripts": {
     "start": "node index.js"
   },
-  "author": "Your Name",
+  "author": "Fazlul Karim",
   "license": "ISC"
 }

@@ -194,7 +194,6 @@ stage = aws.apigateway.Stage("myStage",
     rest_api=api.id,
     stage_name="prod",
 )
-# Export the image details
 pulumi.export('image_url', image.image_name)
 
 

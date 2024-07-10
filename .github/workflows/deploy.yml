@@ -1,55 +1,55 @@
-# name: Pulumi Deploy
-# on:
-#   push:
-#     branches:
-#       - main
-#     paths:
-#       - 'Deploy-lambda/**'
+name: Pulumi Deploy
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Deploy-Lambda/**'
 
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v2
-#         with:
-#           python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
 
-#       - name: Install dependencies
-#         run: |
-#           python -m venv venv
-#           source venv/bin/activate
-#           pip install pulumi pulumi-aws pulumi-docker
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install pulumi pulumi-aws pulumi-docker
 
-#       - name: Configure AWS credentials
-#         uses: aws-actions/configure-aws-credentials@v2
-#         with:
-#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws-region: us-east-1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
-#       - name: Pulumi login
-#         env:
-#           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-#         run: |
-#           source venv/bin/activate
-#           pulumi login
+      - name: Pulumi login
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run: |
+          source venv/bin/activate
+          pulumi login
 
-#       - name: Pulumi stack select
-#         run: |
-#           source venv/bin/activate
-#           pulumi stack select Galadon123/lambda-function-deploy --cwd Deploy-lambda
+      - name: Pulumi stack select
+        run: |
+          source venv/bin/activate
+          pulumi stack select Galadon123/lambda-function-deploy --cwd Deploy-Lambda
 
-#       - name: Pulumi refresh
-#         run: |
-#           source venv/bin/activate
-#           pulumi refresh --yes --cwd Deploy-lambda
+      - name: Pulumi refresh
+        run: |
+          source venv/bin/activate
+          pulumi refresh --yes --cwd Deploy-Lambda
 
-#       - name: Pulumi up
-#         run: |
-#           source venv/bin/activate
-#           pulumi up --yes --cwd Deploy-lambda
+      - name: Pulumi up
+        run: |
+          source venv/bin/activate
+          pulumi up --yes --cwd Deploy-Lambda
