@@ -58,16 +58,3 @@ jobs:
         run: |
           source venv/bin/activate
           pulumi up --yes --cwd Deploy-Lambda
-
-  run-on-dir-change:
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: ${{ github.event_name == 'push' && github.event.changes.contains('Deploy-Lambda/') && needs.deploy.result == 'success' }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Run on directory change
-        run: |
-          # Add your commands here to run when the Deploy-Lambda directory changes
