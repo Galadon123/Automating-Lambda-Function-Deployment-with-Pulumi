@@ -5,11 +5,12 @@ on:
       - main
     paths:
       - 'Deploy-Lambda/**'
-      workflow_dispatch:
-      workflow_run:
-        workflows: ["Pulumi Deploy"]
-        types:
-          - completed
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Pulumi Deploy"]
+    types:
+      - completed
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
