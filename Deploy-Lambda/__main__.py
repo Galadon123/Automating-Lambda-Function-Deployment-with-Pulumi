@@ -3,7 +3,7 @@ import pulumi_aws as aws
 import json
 import base64
 import pulumi_docker as docker
-from pulumi_docker import Image, DockerBuild, ImageRegistry
+from pulumi_docker import Image, ImageRegistry
 import subprocess
 import time
 
