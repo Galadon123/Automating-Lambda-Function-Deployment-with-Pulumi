@@ -91,7 +91,7 @@ update_lambda = LambdaUpdate('update-lambda-function',
         'function_name': lambda_function_name,
         'image_uri': image.image_name,
         'region': aws.config.region,
-        'timestamp': str(time.time())  # Add this line
+        'timestamp': str(time.time())  # Ensure a unique ID for the update
     },
     opts=pulumi.ResourceOptions(depends_on=[image])
 )
