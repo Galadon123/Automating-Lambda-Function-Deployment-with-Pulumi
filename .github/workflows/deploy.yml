@@ -1,4 +1,5 @@
 name: Pulumi Deploy Lambda
+
 on:
   push:
     branches:
@@ -24,10 +25,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
+      - name: Create virtual environment
         run: |
-          python -m venv venv
-          source venv/bin/activate
+          python -m venv Deploy-Lambda/venv
+          source Deploy-Lambda/venv/bin/activate
+          pip install --upgrade pip setuptools wheel
           pip install pulumi pulumi-aws pulumi-docker
 
       - name: Configure AWS credentials
@@ -41,20 +43,20 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         run: |
-          source venv/bin/activate
+          source Deploy-Lambda/venv/bin/activate
           pulumi login
 
       - name: Pulumi stack select
         run: |
-          source venv/bin/activate
+          source Deploy-Lambda/venv/bin/activate
           pulumi stack select Galadon123/lambda-function-deploy --cwd Deploy-Lambda
 
       - name: Pulumi refresh
         run: |
-          source venv/bin/activate
+          source Deploy-Lambda/venv/bin/activate
           pulumi refresh --yes --cwd Deploy-Lambda
 
       - name: Pulumi up
         run: |
-          source venv/bin/activate
+          source Deploy-Lambda/venv/bin/activate
           pulumi up --yes --cwd Deploy-Lambda
