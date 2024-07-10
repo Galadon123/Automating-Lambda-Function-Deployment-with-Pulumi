@@ -9,7 +9,7 @@ from storage import create_storage_and_outputs
 # Create network infrastru
 network = create_network_infrastructure()
 
-# Create security groups
+# Create security groupsfaf
 security_groups = create_security_groups(network["vpc"].id)
 
 # Create Lambda function and related 
