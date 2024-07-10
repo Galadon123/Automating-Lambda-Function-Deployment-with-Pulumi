@@ -22,7 +22,7 @@ class LambdaUpdater(pulumi.dynamic.ResourceProvider):
         cmd = f"aws lambda update-function-code --function-name {props['function_name']} --image-uri {props['image_uri']} --region {props['region']}"
         result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
         
-        # Use the existing ID
+        # Use the existing ID's
         props['id'] = id
         
         return pulumi.dynamic.UpdateResult(outs=props)
