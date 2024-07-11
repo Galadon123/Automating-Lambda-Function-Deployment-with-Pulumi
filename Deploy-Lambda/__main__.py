@@ -54,7 +54,7 @@ exports = get_exports_from_s3('lambda-function-bucket-poridhi-1213', 'pulumi-exp
 repository_url = exports.apply(lambda exp: exp['repository_url'])
 ecr_registry_id = exports.apply(lambda exp: exp['ecr_registry_id'])
 
-# Get repository credentials
+# Get repository credential
 creds = aws.ecr.get_credentials_output(registry_id=ecr_registry_id)
 
 decoded_creds = creds.authorization_token.apply(

@@ -2,6 +2,8 @@
 
 This project demonstrates the automated deployment of a Lambda function using Pulumi and GitHub Actions. By integrating Pulumi for infrastructure as code and GitHub Actions for continuous deployment, it ensures a smooth, repeatable process for provisioning AWS resources and deploying serverless applications. The automation setup enhances the efficiency and reliability of managing cloud infrastructure, streamlining the deployment process while maintaining high standards of observability.
 
+![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/lambda-overview.png)
+
 ## Project Directory
 
 ```
@@ -27,7 +29,7 @@ project-root/
 ```
 
 
-## Locally Set Up Pulumi for the `infra` Directory
+## Locally Set Up Pulumi for the `infrastructure` Directory
 
 ### Step 1: Install Pulumi
 
@@ -59,8 +61,6 @@ This command initializes a new Pulumi project using the AWS Python template in t
 ### `infrastructure/__main__.py`
 
 ```python
-# __main__.py
-
 import pulumi
 from network import create_network_infrastructure
 from security import create_security_groups
