@@ -952,7 +952,7 @@ This GitHub Actions workflow is triggered by changes in the `Deploy-Lambda` dire
 
      Outputs:
 
-    ![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/o-3.png)
+     ![](https://github.com/Galadon123/Automating-Lambda-Function-Deployment-with-Pulumi/blob/main/images/o-3.png)
 
 ### Test Each API-Gateway Endpoint
 Make sure to test each of the API-Gateway endpoints:
